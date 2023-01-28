@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block head_title %}Home{% endblock head_title %}
+{% block content %}
+
+Welcome to Tweetme
+
+<div id="tweets">
+    Replace Me
+</div>
+
+<script>
+    const tweetsElement = document.getElementById("tweets")
+    tweetsElement.innerHTML = 'Loading ...'
+
+    const xhr = new XMLHttpRequest()
+    const method = "GET"
+    const url = "/tweets"
+    const responseType = "json"
+
+    function handleDidLike(tweet_id, currnetCount) {
+        console.log(tweet_id, currnetCount)
+    }
+
+    function likeBtn(tweet) {
+        return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" +
+        tweet.id + "," +
+        tweet.likes +
+        ")>" +
+        tweet.likes +
+        " Like</button>"
+    }
+
+    function formatTweetElement(tweet) {
+        return "<div class='mb-4 tweet'><h1>" +
+            tweet.id +"</h1><p>" +
+            tweet.content +
+            "</p><div class='btn-group'>"+
+            likeBtn(tweet) +
+            "</div></div>"
+    }
+
+    xhr.responseType = responseType
+    xhr.open(method, url)
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        var listedItems = serverResponse.response
+        var finalTweetStr = ""
+
+        for(let data of listedItems) {
+            var currentItem = formatTweetElement(data)
+            finalTweetStr += currentItem
+        }
+        tweetsElement.innerHTML = finalTweetStr
+    }
+    xhr.send()
+</script>
+{% endblock content %}
