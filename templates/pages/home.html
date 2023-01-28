@@ -2,15 +2,18 @@
 {% block head_title %}Home{% endblock head_title %}
 {% block content %}
 
-Welcome to Tweetme
+<div class="row text-center">
+  <div class="col">
+    <h1>Welcome to Tweetme<h1>
+  </div>
+</div>
 
-<div id="tweets">
+<div class="row" id="tweets">
   Replace Me
 </div>
 
 <script>
   const tweetsElement = document.getElementById("tweets")
-  tweetsElement.innerHTML = 'Loading ...'
 
   const xhr = new XMLHttpRequest()
   const method = "GET"
@@ -31,8 +34,8 @@ Welcome to Tweetme
   }
 
   function formatTweetElement(tweet) {
-    return "<div class='mb-4 tweet'><h1>" +
-      tweet.id +"</h1><p>" +
+    return "<div class='col-12 col-md-12 mx-auto border rounded py-3 mb-4 tweet' id='tweet-" +
+      tweet.id + "'><p>" +
       tweet.content +
       "</p><div class='btn-group'>"+
       likeBtn(tweet) +
