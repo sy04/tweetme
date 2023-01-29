@@ -14,12 +14,21 @@ def home_page(request, *args, **kwargs):
   return render(request, "pages/home.html", context={}, status=200)
 
 def tweet_create_view(request, *args, **kwargs):
+  is_ajax = request.META.get('HTTP_X_REQUESTED_WITH' or 'X-Requested-With') == 'XMLHttpRequest'
+  user = request.user
+
+  if not request.user.is_authenticated:
+    user = None
+    if is_ajax:
+      return JsonResponse({}, status=401)
+    return redirect(settings.LONGIN_URL)
+
   form = TweetForm(request.POST or None)
   next_url = request.POST.get("next") or None
-  is_ajax = request.META.get('HTTP_X_REQUESTED_WITH' or 'X-Requested-With') == 'XMLHttpRequest'
 
   if form.is_valid():
     obj = form.save(commit=False)
+    obj.user = user
     obj.save()
 
     if is_ajax:
