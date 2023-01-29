@@ -99,7 +99,8 @@
     xhr.open(method, url)
     xhr.onload = function() {
       const serverResponse = xhr.response
-      var listedItems = serverResponse.response
+      // var listedItems = serverResponse.response //pure django
+      var listedItems = serverResponse
       var finalTweetStr = ""
   
       for(let data of listedItems) {
