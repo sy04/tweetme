@@ -12,6 +12,7 @@ User = get_user_model()
 class TweetTestCase(TestCase):
   def setUp(self):
     self.user = User.objects.create_user(username='cfe', password='somepassword')
+    self.userb = User.objects.create_user(username='cfe-2', password='somepassword2')
     Tweet.objects.create(
       content='first tweet',
       user=self.user
@@ -22,7 +23,7 @@ class TweetTestCase(TestCase):
     )
     Tweet.objects.create(
       content='first tweet',
-      user=self.user
+      user=self.userb
     )
     self.currentCount = Tweet.objects.all().count()
 
@@ -107,3 +108,13 @@ class TweetTestCase(TestCase):
     data = response.json()
     _id = data.get("id")
     self.assertEqual(_id, 1)
+
+  def test_tweet_delete_api_view(self):
+    client = self.get_client()
+    response = client.delete("/api/tweets/1/delete/")
+    self.assertEqual(response.status_code, 200)
+    client = self.get_client()
+    response = client.delete("/api/tweets/1/delete/")
+    self.assertEqual(response.status_code, 404)
+    response_incorect_owner = client.delete("/api/tweets/3/delete/")
+    self.assertEqual(response_incorect_owner.status_code, 401)
